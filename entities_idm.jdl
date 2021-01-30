@@ -1,4 +1,5 @@
 
+
 entity Account {
 	guid String
 	tonr String
@@ -11,8 +12,9 @@ enum STATUS{
 	BESTELLT, INAKTIV, AKTIVIERT, STORNIERT, DEAKTIVIERT
 }
 entity Bestand{
-
-
+    tsCreated LocalDate
+    tsProvisioniert LocalDate
+    tsDeleted LocalDate
 }
 entity EmList{
 	emMatNo String
@@ -60,32 +62,37 @@ entity Access{
 entity Auftrag{
 	typ String
 }
+entity Credentials{
+    tsErstellt LocalDate
+    tsProvisioniert LocalDate
+    tsExpired LocalDate
+
+}
 enum AUFTRAGSTATUS{
-	Created
-    InCompletion
-    Completed
-    ErrorInCompletion
-    InExecution
-    Executed
-    ErrorInExecution
-    InCommit
-    Commited
-    ErrorInCommit
-    InCancellation
-    Aborted
-    ErrorInCancellation
-    InRollback
-    ErrorInRollback
+	CREATED
+    INCOMPLETION
+    COMPLETED
+    ERRORINCOMPLETION
+    INEXECUTION
+    EXECUTED
+    ERRORINEXECUTION
+    INCOMMIT
+    COMMITED
+    ERRORINCOMMIT
+    INCANCELLATION
+    ABORTED
+    ERRORINCANCELLATION
+    INROLLBACK
+    ERRORINROLLBACK
 }
 entity AuftragOis{
     status AUFTRAGSTATUS
-
 }
 entity AuftragRef{
 	id String
-    typ AuftragTyp
+    typ RefTyp
 }
-enum AuftragTyp{
+enum RefTyp{
 	CRM
     SMF
 	DKK
@@ -101,6 +108,7 @@ relationship OneToOne {
 	Bestand to Sperre
 	Bestand to Access
 
+    Credentials to Auftrag
 }
 relationship OneToMany {
 	Auftrag to Bestand
@@ -112,6 +120,7 @@ relationship ManyToOne {
     EmList{instId} to Instanz
     Rufnummer{instId} to Instanz
     Sperre{instId} to Instanz
+    AuftragOis to Auftrag
 }
 
 // Set pagination options
