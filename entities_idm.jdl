@@ -1,0 +1,128 @@
+
+entity Account {
+	guid String
+	tonr String
+	kdnr String
+    system String
+    privacy String
+    status STATUS
+}
+enum STATUS{
+	BESTELLT, INAKTIV, AKTIVIERT, STORNIERT, DEAKTIVIERT
+}
+entity Bestand{
+
+
+}
+entity EmList{
+	emMatNo String
+    mpMatNo String
+    prodId String
+    assetId String
+    instId String
+    isAccountOwner Boolean
+    isInstOwner Boolean
+}
+
+
+entity Instanz{
+	instId String
+    instKenner String
+    instType String
+}
+
+entity Parameter{
+	destField String
+    destSystem String
+    paramId String
+    paramType String
+    paramValue String
+}
+
+entity Rufnummer{
+	instId String
+	struct String
+	unstruct String
+	type String
+    isHrnr Boolean
+}
+
+entity Sperre{
+	typ String
+	gruppe String
+	scope String
+}
+entity Access{
+	lineId String
+    userAuth Boolean
+}
+
+entity Auftrag{
+	typ String
+}
+enum AUFTRAGSTATUS{
+	Created
+    InCompletion
+    Completed
+    ErrorInCompletion
+    InExecution
+    Executed
+    ErrorInExecution
+    InCommit
+    Commited
+    ErrorInCommit
+    InCancellation
+    Aborted
+    ErrorInCancellation
+    InRollback
+    ErrorInRollback
+}
+entity AuftragOis{
+    status AUFTRAGSTATUS
+
+}
+entity AuftragRef{
+	id String
+    typ AuftragTyp
+}
+enum AuftragTyp{
+	CRM
+    SMF
+	DKK
+	SNR
+	BSSOE
+    MISC
+}
+
+relationship OneToOne {
+	Bestand to EmList
+	Bestand to Rufnummer
+	Bestand to Parameter
+	Bestand to Sperre
+	Bestand to Access
+
+}
+relationship OneToMany {
+	Auftrag to Bestand
+    Auftrag to AuftragRef
+}
+
+relationship ManyToOne {
+	Auftrag to Account
+    EmList{instId} to Instanz
+    Rufnummer{instId} to Instanz
+    Sperre{instId} to Instanz
+}
+
+// Set pagination options
+paginate Account, Bestand with infinite-scroll
+paginate EmList with pagination
+
+// Use Data Transfer Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceClass
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
